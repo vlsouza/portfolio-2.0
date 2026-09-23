@@ -39,7 +39,7 @@ export const quickFacts = [
   { value: '8', title: 'Years with Distributed Systems', caption: 'designing and running services in production' },
   { value: '6', title: 'Years with Go', caption: 'my main language for backend' },
   { value: '3', title: 'Years with Node.js', caption: 'APIs, bots and serverless functions' },
-  { value: '10', title: 'Programming Languages', caption: 'I have experience with' },
+  { value: '10+', title: 'Programming Languages', caption: 'Golang, NodeJS, C# .NET, Scala, Ruby on Rails, Erlang, and more' },
 ];
 
 export const education = [
