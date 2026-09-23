@@ -1,0 +1,123 @@
+---
+import type { Project } from '../lib/projects';
+import StackTag from './StackTag.astro';
+
+interface Props {
+  project: Project;
+  // Featured cards also show the summary
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+const { title, type, category, stack, thumb, summary } = project.data;
+// Colour carries meaning: blue = Backend & AI, red = Games
+const color = category === 'backend' ? 'blue' : 'red';
+---
+
+<a class={`card card-${color}`} href={`/projects/${project.id}`}>
+  {
+    stack.length > 0 && (
+      <div class="tags">
+        {stack.slice(0, 2).map((key) => (
+          <StackTag name={key} />
+        ))}
+      </div>
+    )
+  }
+  <span class="thumb"><img src={thumb} alt="" loading="lazy" width="96" height="96" /></span>
+  <div class="info">
+    <h3 class="lego">{title}</h3>
+    <p class="type">{type}</p>
+    {featured && <p class="summary">{summary}</p>}
+    <span class="more">know more</span>
+  </div>
+</a>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+    min-height: 176px;
+    padding: 32px 20px 24px;
+    text-decoration: none;
+    color: var(--black);
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .card:hover,
+  .card:focus-visible {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 var(--white);
+  }
+  .card-blue {
+    background: var(--blue);
+    --more: var(--white);
+  }
+  .card-red {
+    background: var(--red);
+    --more: var(--yellow);
+  }
+  .tags {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    display: flex;
+    gap: 6px;
+  }
+  /* Square frame; the image is slightly zoomed so icons with baked-in rounded corners read as square */
+  .thumb {
+    flex: 0 0 96px;
+    width: 96px;
+    height: 96px;
+    border: 6px solid var(--white);
+    background: var(--white);
+    overflow: hidden;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.14);
+  }
+  .info {
+    min-width: 0;
+  }
+  h3 {
+    font-size: 18px;
+    --lego-ink: var(--black);
+    --lego-fill: var(--yellow);
+    -webkit-text-stroke-width: 1px;
+    text-shadow: 1px 1px 0 var(--black);
+    margin-bottom: 4px;
+  }
+  .type {
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .card-blue .type {
+    color: var(--white);
+  }
+  .summary {
+    margin: -8px 0 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--white);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .more {
+    font-family: var(--font-small);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: var(--more);
+  }
+</style>

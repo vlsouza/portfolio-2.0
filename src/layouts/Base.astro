@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Vinicius Souza: Software Engineer | Backend | Claude Code & AI Agent Workflows. Based in Lisbon.',
+} = Astro.props;
+const fullTitle = `${title} | Vinicius Portfolio`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@300;400;600;700;900&family=Titan+One&display=swap"
+    />
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="credit container">
+      © {new Date().getFullYear()} Vinicius Souza · original design by @brubregas
+    </footer>
+  </body>
+</html>
+
+<style>
+  .credit {
+    font-family: var(--font-small);
+    font-size: 12px;
+    color: #555;
+    padding-block: 24px;
+  }
+</style>

@@ -1,0 +1,251 @@
+---
+// Shared template for project and experience pages:
+// header (title, subtitle, chips | summary) → blue CTA band (+ gallery) → body → prev/back/next.
+import Base from '../layouts/Base.astro';
+import LegoTitle from './LegoTitle.astro';
+import StackTag from './StackTag.astro';
+
+interface Link {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  title: string;
+  subtitle: string;
+  summary: string;
+  stack: string[];
+  cta?: { heading: string; label: string; url: string };
+  media?: { src: string; caption?: string; href?: string }[];
+  prev: Link;
+  next: Link;
+  back: Link;
+  // "project" or "experience", used in the prev/next labels
+  kind: string;
+}
+
+const { title, subtitle, summary, stack, cta, media = [], prev, next, back, kind } = Astro.props;
+const hasBand = Boolean(cta) || media.length > 0;
+---
+
+<Base title={title} description={summary}>
+  <section class="head">
+    <div class="head-dark">
+      <h1>{title}</h1>
+      <p class="subtitle">{subtitle}</p>
+      {
+        stack.length > 0 && (
+          <div class="stack">
+            {stack.map((s) => (
+              <StackTag name={s} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+    <div class="head-light">
+      <p class="summary">{summary}</p>
+    </div>
+  </section>
+
+  {
+    hasBand && (
+      <section class="band">
+        <div class="container">
+          {cta && (
+            <a class="cta" href={cta.url} target="_blank" rel="noopener">
+              <LegoTitle ink="var(--black)" fill="var(--yellow)" size="clamp(24px, 3.4vw, 34px)">
+                {cta.heading}
+              </LegoTitle>
+              <span class="cta-label">{cta.label}</span>
+            </a>
+          )}
+          {media.length > 0 && (
+            <div class={`gallery ${media.length === 1 ? 'single' : ''}`}>
+              {media.map((m) => {
+                const img = <img src={m.src} alt={m.caption ?? `${title} screenshot`} loading="lazy" />;
+                return (
+                  <figure>
+                    {m.href ? (
+                      <a href={m.href} target="_blank" rel="noopener">
+                        {img}
+                      </a>
+                    ) : (
+                      img
+                    )}
+                    {m.caption && <figcaption>{m.caption}</figcaption>}
+                  </figure>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  <article class="body container">
+    <slot />
+  </article>
+
+  <nav class="bottom-nav container" aria-label={`${kind} navigation`}>
+    <a href={prev.href} aria-label={`Previous ${kind}: ${prev.label}`}>&lt;&lt;&lt; Previous</a>
+    <a href={back.href}>{back.label}</a>
+    <a href={next.href} aria-label={`Next ${kind}: ${next.label}`}><mark>Next &gt;&gt;&gt;</mark></a>
+  </nav>
+</Base>
+
+<style>
+  .head {
+    /* Outer edge of the page container, so the header lines up with the body, nav and footer */
+    --edge: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--black);
+    border-bottom: 1px solid var(--black);
+  }
+  .head-dark {
+    background: var(--black);
+    color: var(--white);
+    padding: 36px clamp(20px, 4vw, 48px) 36px var(--edge);
+  }
+  .head-light {
+    padding: 36px var(--edge) 36px clamp(20px, 4vw, 48px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  h1 {
+    font-size: clamp(30px, 4.5vw, 40px);
+    font-weight: 700;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--white);
+    width: fit-content;
+    min-width: 60%;
+  }
+  .subtitle {
+    font-weight: 700;
+    font-size: 15px;
+    margin: 10px 0 16px;
+  }
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .summary {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  .band {
+    background: var(--blue);
+    padding-block: 32px 40px;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    text-decoration: none;
+  }
+  .cta :global(.lego-title) {
+    margin-bottom: 0;
+  }
+  .cta-label {
+    color: var(--white);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .cta:hover .cta-label {
+    color: var(--yellow);
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    margin-top: 28px;
+  }
+  .gallery.single {
+    grid-template-columns: minmax(0, 720px);
+  }
+  figure {
+    margin: 0;
+  }
+  figure img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    background: rgb(0 0 0 / 0.12);
+  }
+  figcaption {
+    color: var(--white);
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  .body {
+    max-width: 820px;
+    padding-block: 48px 32px;
+    font-weight: 500;
+  }
+  .body :global(h2) {
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 700;
+    margin: 40px 0 12px;
+  }
+  .body :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .body :global(h3) {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 28px 0 8px;
+  }
+  .body :global(li) {
+    margin-bottom: 4px;
+  }
+  .body :global(pre) {
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 13px;
+  }
+  .body :global(code) {
+    font-size: 0.92em;
+  }
+  .body :global(:not(pre) > code) {
+    background: #f1f1f1;
+    padding: 1px 5px;
+  }
+  .body :global(blockquote) {
+    margin: 24px 0;
+    padding: 8px 16px;
+    border-left: 6px solid var(--yellow);
+    background: #fafafa;
+  }
+
+  .bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-block: 24px 40px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  @media (max-width: 760px) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+    .head-dark,
+    .head-light {
+      padding-inline: var(--gutter);
+    }
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

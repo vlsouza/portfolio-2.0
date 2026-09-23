@@ -1,0 +1,34 @@
+---
+import { render } from 'astro:content';
+import DetailPage from '../../components/DetailPage.astro';
+import { formatDuration, formatPeriod, getExperience, neighbours, type Experience } from '../../lib/projects';
+
+export async function getStaticPaths() {
+  const items = await getExperience();
+  return items.map((item) => ({ params: { id: item.id }, props: { item, ...neighbours(items, item.id) } }));
+}
+
+interface Props {
+  item: Experience;
+  prev: Experience;
+  next: Experience;
+}
+
+const { item, prev, next } = Astro.props;
+const { company, role, start, end, location, summary, stack, cta } = item.data;
+const { Content } = await render(item);
+---
+
+<DetailPage
+  kind="experience"
+  title={company}
+  subtitle={`${role} · ${formatPeriod(start, end)} · ${formatDuration(start, end)} · ${location}`}
+  summary={summary}
+  stack={stack}
+  cta={cta}
+  prev={{ href: `/experience/${prev.id}`, label: prev.data.company }}
+  next={{ href: `/experience/${next.id}`, label: next.data.company }}
+  back={{ href: '/#experience', label: 'All experience' }}
+>
+  <Content />
+</DetailPage>

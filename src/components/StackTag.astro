@@ -1,0 +1,59 @@
+---
+// Technology chip. Always text, one visual style, so every card and page reads the same.
+interface Props {
+  name: string;
+}
+
+const labels: Record<string, string> = {
+  golang: 'Go',
+  'distributed-systems': 'Distributed Systems',
+  azure: 'Azure',
+  dotnet: '.NET',
+  erlang: 'Erlang',
+  jenkins: 'Jenkins',
+  node: 'Node.js',
+  typescript: 'TypeScript',
+  scala: 'Scala',
+  rails: 'Ruby on Rails',
+  csharp: 'C#',
+  cpp: 'C/C++',
+  mcp: 'MCP',
+  kafka: 'Kafka',
+  aws: 'AWS',
+  postgresql: 'PostgreSQL',
+  dynamodb: 'DynamoDB',
+  redis: 'Redis',
+  docker: 'Docker',
+  'sql-server': 'SQL Server',
+  angularjs: 'AngularJS',
+  'json-rpc': 'JSON-RPC',
+  swagger: 'Swagger',
+  'discord-api': 'Discord API',
+  alexa: 'Alexa Skills Kit',
+  pokeapi: 'PokéAPI',
+  unity: 'Unity',
+  sdl2: 'SDL2',
+};
+
+const { name } = Astro.props;
+const label = labels[name] ?? name;
+---
+
+<span class="tag">{label}</span>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 8px;
+    background: var(--white);
+    color: var(--black);
+    border: 1.5px solid var(--black);
+    font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+</style>

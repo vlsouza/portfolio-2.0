@@ -1,0 +1,176 @@
+---
+import Base from '../layouts/Base.astro';
+import AboutIntro from '../components/AboutIntro.astro';
+import LegoTitle from '../components/LegoTitle.astro';
+import ContactInfo from '../components/ContactInfo.astro';
+import { assets, education, experience, favoriteGames, languages, socialLinks } from '../data/site';
+
+const linkedin = socialLinks.find((l) => l.label === 'LinkedIn')!.href;
+---
+
+<Base title="About me">
+  <AboutIntro />
+
+  <section class="cv">
+    <div class="cv-inner">
+      <div class="col col-light">
+        <LegoTitle size="30px"><span aria-hidden="true">🎓</span> Education</LegoTitle>
+        {
+          education.map((e) => (
+            <div class="entry">
+              <p>
+                <span class="flag">{e.flag}</span> <strong>{e.school}</strong> - {e.kind}
+              </p>
+              <p>{e.course}</p>
+              <p class="period">({e.period})</p>
+            </div>
+          ))
+        }
+        <LegoTitle size="30px"><span aria-hidden="true">🗣️</span> Languages</LegoTitle>
+        <ul class="langs">{languages.map((l) => <li>{l}</li>)}</ul>
+      </div>
+
+      <div class="col col-dark" id="experience">
+        <LegoTitle size="30px"><span aria-hidden="true">🏰</span> Experience</LegoTitle>
+        {
+          experience.map((x) => (
+            <div class="entry">
+              <p>
+                <strong>{x.href ? <a href={x.href}>{x.company}</a> : x.company}</strong>
+              </p>
+              {x.roles.map(([role, period]) => (
+                <p>
+                  {role} <span class="period">({period})</span>
+                </p>
+              ))}
+            </div>
+          ))
+        }
+        <a class="linkedin" href={linkedin} target="_blank" rel="noopener">Check details on LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="games container">
+    <LegoTitle ink="var(--blue)">Favorite games</LegoTitle>
+    <ul>
+      {
+        favoriteGames.map((g) => (
+          <li>
+            <img src={g.src} alt={g.title} title={g.title} loading="lazy" />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="footer-contact">
+    <div class="container">
+      <ContactInfo ink="var(--black)" fill="var(--yellow)" inline />
+      <img class="lego-brick" src={assets.legoYellow} alt="" loading="lazy" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cv {
+    background: var(--yellow);
+  }
+  .cv-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: var(--container);
+    margin-inline: auto;
+  }
+  .col {
+    padding: 40px clamp(20px, 3vw, 40px) 56px;
+  }
+  .col-light {
+    background: var(--white);
+  }
+  .col-dark {
+    background: var(--black);
+    color: var(--white);
+  }
+  .entry {
+    margin-bottom: 26px;
+    font-size: 13px;
+  }
+  .entry p {
+    margin: 0;
+  }
+  .entry a {
+    text-decoration-color: var(--yellow);
+    text-underline-offset: 3px;
+  }
+  .entry a:hover {
+    color: var(--yellow);
+  }
+  .flag {
+    font-size: 11px;
+  }
+  .period {
+    font-size: 11px;
+  }
+  .langs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .linkedin {
+    font-size: 12px;
+  }
+
+  .games {
+    padding-block: 48px 64px;
+  }
+  .games ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+  .games img {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+  }
+  .games img:hover {
+    transform: scale(1.04);
+  }
+
+  .footer-contact {
+    background: var(--red);
+    padding-block: 32px;
+  }
+  .footer-contact .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .lego-brick {
+    width: 180px;
+  }
+
+  @media (max-width: 760px) {
+    .games ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .cv-inner {
+      grid-template-columns: 1fr;
+    }
+    .footer-contact .container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .lego-brick {
+      width: 120px;
+    }
+  }
+</style>

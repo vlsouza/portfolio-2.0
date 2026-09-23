@@ -1,0 +1,88 @@
+---
+// Career numbers at a glance. Full-bleed yellow band between Experience (white) and Projects (black).
+import LegoTitle from './LegoTitle.astro';
+import { quickFacts } from '../data/site';
+---
+
+<section class="facts" aria-labelledby="facts-title">
+  <div class="container">
+    <LegoTitle ink="var(--black)" fill="var(--white)"><span id="facts-title">Quick facts</span></LegoTitle>
+    <ul>
+      {
+        quickFacts.map((f) => (
+          <li>
+            <strong>{f.value}</strong>
+            <span class="title">{f.title}</span>
+            <span class="caption">{f.caption}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .facts {
+    background: var(--yellow);
+    border-block: 2px solid var(--black);
+    padding-block: 40px 64px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+  li {
+    display: grid;
+    align-content: start;
+    gap: 2px;
+    padding: 22px 24px;
+    background: var(--white);
+    border: 2px solid var(--black);
+    box-shadow: var(--shadow-hard);
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  li:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--blue);
+  }
+  strong {
+    font-size: clamp(40px, 4.6vw, 56px);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .title {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .caption {
+    font-size: 13px;
+    color: #333;
+  }
+  @media (max-width: 900px) {
+    ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+  @media (max-width: 480px) {
+    ul {
+      gap: 16px;
+    }
+    li {
+      padding: 16px;
+    }
+    .title {
+      font-size: 13px;
+    }
+    .caption {
+      font-size: 12px;
+    }
+  }
+</style>

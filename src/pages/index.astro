@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ExperienceList from '../components/ExperienceList.astro';
+import QuickFacts from '../components/QuickFacts.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import AboutIntro from '../components/AboutIntro.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { getExperience, getProjects } from '../lib/projects';
+
+const [experience, projects] = await Promise.all([getExperience(), getProjects()]);
+---
+
+<Base title="Home">
+  <Hero />
+  <ExperienceList items={experience} />
+  <QuickFacts />
+  <ProjectGrid projects={projects} />
+  <AboutIntro readMore />
+  <ContactSection />
+</Base>

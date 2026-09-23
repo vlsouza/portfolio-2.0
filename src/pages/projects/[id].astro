@@ -1,0 +1,39 @@
+---
+import { render } from 'astro:content';
+import DetailPage from '../../components/DetailPage.astro';
+import { getProjects, neighbours, type Project } from '../../lib/projects';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => {
+    // Prev/next stays inside the same category (Backend & AI or Games)
+    const sameCategory = projects.filter((p) => p.data.category === project.data.category);
+    return { params: { id: project.id }, props: { project, ...neighbours(sameCategory, project.id) } };
+  });
+}
+
+interface Props {
+  project: Project;
+  prev: Project;
+  next: Project;
+}
+
+const { project, prev, next } = Astro.props;
+const { title, type, platform, summary, stack, cta, media } = project.data;
+const { Content } = await render(project);
+---
+
+<DetailPage
+  kind="project"
+  title={title}
+  subtitle={`${type} · ${platform}`}
+  summary={summary}
+  stack={stack}
+  cta={cta}
+  media={media}
+  prev={{ href: `/projects/${prev.id}`, label: prev.data.title }}
+  next={{ href: `/projects/${next.id}`, label: next.data.title }}
+  back={{ href: '/#projects', label: 'All projects' }}
+>
+  <Content />
+</DetailPage>

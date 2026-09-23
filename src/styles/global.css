@@ -1,0 +1,124 @@
+/*
+ * Visual identity captured from the original viniciusportfolio.com (Wix).
+ * Title font: the original uses "Lego Thick". To use it, put a licensed copy
+ * at /public/fonts/legothick.woff2 and add:
+ *   @font-face { font-family: 'Lego Thick'; src: url('/fonts/legothick.woff2') format('woff2'); font-display: swap; }
+ * Until then "Titan One" (Google Fonts) is used.
+ */
+
+:root {
+  --blue: #1d6fe2;
+  --red: #f74444;
+  --yellow: #fbfb43;
+  --black: #000;
+  --white: #fff;
+  --nav-active: #0000ff;
+
+  --font-title: 'Lego Thick', 'Titan One', system-ui, sans-serif;
+  --font-body: 'Poppins', system-ui, sans-serif;
+  --font-small: 'Open Sans', system-ui, sans-serif;
+
+  --shadow-hard: 6px 6px 0 var(--black);
+  /* Grows with the screen like the original, capped for readability */
+  --container: clamp(1100px, 72vw, 1440px);
+  --gutter: clamp(16px, 4vw, 48px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.15;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Yellow highlighter used on key phrases across the site */
+mark,
+.hl {
+  background: var(--yellow);
+  color: var(--black);
+  padding: 0 2px;
+}
+
+/* White text boxes with black outline (About text over the 3DS photo) */
+.boxed-lines {
+  display: inline;
+  background: var(--white);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  box-shadow: 0 0 0 1px var(--black);
+  padding: 1px 4px;
+  line-height: 1.95;
+}
+
+/* LEGO-style display text: outlined glyph with a hard 3D shadow */
+.lego {
+  font-family: var(--font-title);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--lego-fill, var(--white));
+  -webkit-text-stroke: 1.5px var(--lego-ink, var(--black));
+  paint-order: stroke fill;
+  text-shadow: 2px 2px 0 var(--lego-ink, var(--black));
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

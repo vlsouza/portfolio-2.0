@@ -1,0 +1,81 @@
+---
+import LegoTitle from './LegoTitle.astro';
+import { person, socialLinks } from '../data/site';
+
+interface Props {
+  // Title ink colour: blue on white backgrounds, yellow on red
+  ink?: string;
+  fill?: string;
+  // Lay Contact and My Links side by side
+  inline?: boolean;
+}
+
+const { ink = 'var(--blue)', fill = 'var(--white)', inline = false } = Astro.props;
+---
+
+<div class:list={['contact-info', { inline }]}>
+  <div>
+  <LegoTitle ink={ink} fill={fill} size="32px">Contact</LegoTitle>
+  <p class="line"><a href={`mailto:${person.email}`}>{person.email}</a></p>
+  <p class="line">Currently located in {person.location} 📍</p>
+  </div>
+  <div>
+
+  <LegoTitle ink={ink} fill={fill} size="32px">My links</LegoTitle>
+  <ul>
+    {
+      socialLinks.map((l) => (
+        <li>
+          <a href={l.href} target="_blank" rel="noopener">
+            {l.label}
+          </a>
+          <img src={l.icon} alt="" width="16" height="16" loading="lazy" />
+        </li>
+      ))
+    }
+  </ul>
+  </div>
+</div>
+
+<style>
+  .inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 64px;
+  }
+  .inline .line:last-of-type {
+    margin-bottom: 0;
+  }
+  .line {
+    margin: 0 0 4px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .line:last-of-type {
+    margin-bottom: 36px;
+  }
+  .line a {
+    text-decoration: none;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  li a {
+    font-weight: 700;
+    font-size: 13px;
+    min-width: 64px;
+  }
+  li img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+</style>

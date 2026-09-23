@@ -1,0 +1,222 @@
+---
+// Contact without a form: a static site can't send mail itself, so we give three direct paths
+// (email, LinkedIn, copy address) instead of a form that silently depends on a mail client.
+// Layout: one "Contact" section. The action card is the main column; links are secondary.
+import LegoTitle from './LegoTitle.astro';
+import { assets, person, socialLinks } from '../data/site';
+
+const linkedin = socialLinks.find((l) => l.label === 'LinkedIn')!.href;
+const subject = encodeURIComponent('Hi Vinicius, saw your portfolio');
+---
+
+<section class="contact container" id="contact">
+  <LegoTitle ink="var(--blue)">Contact</LegoTitle>
+
+  <div class="layout">
+  <div class="card">
+    <p class="lego heading">If you're looking for a backend engineer, get in touch!</p>
+    <p class="lead">Open to remote or hybrid roles, based in {person.location}.</p>
+
+    <div class="actions">
+      <a class="btn btn-primary" href={`mailto:${person.email}?subject=${subject}`}>Email me</a>
+      <a class="btn btn-secondary" href={linkedin} target="_blank" rel="noopener">Message me on LinkedIn</a>
+    </div>
+
+    <div class="copy">
+      <code>{person.email}</code>
+      <button type="button" data-copy={person.email} aria-live="polite">Copy</button>
+    </div>
+  </div>
+
+  <aside class="links" aria-label="My links">
+    <ul>
+      {
+        socialLinks.map((l) => (
+          <li>
+            <img src={l.icon} alt="" width="18" height="18" loading="lazy" />
+            <a href={l.href} target="_blank" rel="noopener">
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <img class="lego-brick" src={assets.legoRed} alt="" loading="lazy" />
+  </aside>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('button[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy!);
+        btn.textContent = 'Copied!';
+      } catch {
+        btn.textContent = 'Select to copy';
+      }
+      setTimeout(() => (btn.textContent = 'Copy'), 2000);
+    });
+  });
+</script>
+
+<style>
+  .contact {
+    padding-block: 48px 72px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+    gap: clamp(32px, 6vw, 96px);
+    align-items: start;
+  }
+  /* Top padding matches the card's, so the first link lines up with the card heading */
+  .links {
+    padding-top: 30px;
+  }
+  .links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .links li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .links li img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+  .links a {
+    font-weight: 700;
+    font-size: 15px;
+    text-underline-offset: 3px;
+  }
+  .links a:hover {
+    color: var(--blue);
+  }
+  .lego-brick {
+    width: 150px;
+    margin-top: 32px;
+    transition: transform 0.3s ease;
+  }
+  .lego-brick:hover {
+    transform: rotate(-8deg) translateY(-6px);
+  }
+  .card {
+    display: grid;
+    gap: 20px;
+    padding: 28px;
+    background: var(--white);
+    border: 2px solid var(--black);
+    box-shadow: var(--shadow-hard);
+  }
+  .heading {
+    margin: 0;
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.45;
+    --lego-ink: var(--black);
+    --lego-fill: var(--yellow);
+    -webkit-text-stroke-width: 1px;
+  }
+  .lead {
+    margin: 0;
+    font-size: 14px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border: 2px solid var(--black);
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 var(--black);
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease;
+  }
+  .btn:hover,
+  .btn:focus-visible {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--blue);
+  }
+  .btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--black);
+  }
+  .btn-primary {
+    background: var(--black);
+    color: var(--white);
+  }
+  .btn-secondary {
+    background: var(--white);
+    color: var(--black);
+  }
+  .copy {
+    display: flex;
+    align-items: stretch;
+    border: 1.5px solid var(--black);
+    width: fit-content;
+    max-width: 100%;
+  }
+  .copy code {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 6px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .copy button {
+    border: 0;
+    border-left: 1.5px solid var(--black);
+    background: var(--yellow);
+    padding: 6px 14px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .copy button:hover {
+    background: #f2f22a;
+  }
+  @media (max-width: 760px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .card {
+      padding: 20px;
+    }
+    .links {
+      padding-top: 0;
+    }
+    .copy {
+      width: 100%;
+    }
+    .copy code {
+      font-size: 12px;
+      padding-inline: 10px;
+    }
+    .btn {
+      flex: 1 1 100%;
+    }
+    .lego-brick {
+      width: 110px;
+    }
+  }
+</style>

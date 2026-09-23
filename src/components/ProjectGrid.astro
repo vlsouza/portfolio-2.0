@@ -1,0 +1,102 @@
+---
+import LegoTitle from './LegoTitle.astro';
+import ProjectCard from './ProjectCard.astro';
+import type { Project } from '../lib/projects';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+// Backend & AI is the focus: bigger cards with a summary. Games stay compact.
+const groups = [
+  { key: 'backend', title: 'Backend & AI', intro: 'Services, tools and integrations', color: 'blue', featured: true },
+  { key: 'games', title: 'Games', intro: 'Game design and game dev side quests', color: 'red', featured: false },
+] as const;
+---
+
+<section class="projects" id="projects">
+  <div class="container">
+    <LegoTitle boxed>Personal Projects</LegoTitle>
+    {
+      groups.map((g) => (
+        <div class="group">
+          <div class="group-head">
+            <span class={`swatch swatch-${g.color}`} aria-hidden="true" />
+            <h3 class="lego">{g.title}</h3>
+            <p>{g.intro}</p>
+          </div>
+          <div class:list={['grid', { featured: g.featured }]}>
+            {projects
+              .filter((p) => p.data.category === g.key)
+              .map((p) => (
+                <ProjectCard project={p} featured={g.featured} />
+              ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .projects {
+    background: var(--black);
+    padding-block: 40px 80px;
+  }
+  .group {
+    margin-top: 24px;
+  }
+  .group + .group {
+    margin-top: 72px;
+  }
+  .group-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 32px;
+  }
+  .swatch {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--white);
+  }
+  .swatch-blue {
+    background: var(--blue);
+  }
+  .swatch-red {
+    background: var(--red);
+  }
+  .group-head h3 {
+    font-size: clamp(22px, 3vw, 28px);
+    --lego-ink: var(--black);
+    --lego-fill: var(--yellow);
+    -webkit-text-stroke-width: 1px;
+  }
+  .group-head p {
+    margin: 0;
+    color: var(--white);
+    font-size: 14px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 48px clamp(24px, 4vw, 64px);
+  }
+  .grid.featured {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 44px 32px;
+    }
+  }
+  @media (max-width: 680px) {
+    .grid,
+    .grid.featured {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,74 @@
+---
+// "About me" block over the Nintendo 3DS photo, used on Home and About.
+import LegoTitle from './LegoTitle.astro';
+import { assets } from '../data/site';
+
+interface Props {
+  readMore?: boolean;
+}
+
+const { readMore = false } = Astro.props;
+---
+
+<section class="about-intro" style={`--bg:url(${assets.console3ds})`}>
+  <div class="container">
+    <LegoTitle boxed>About me</LegoTitle>
+    <div class="text">
+      <p>
+        <span class="boxed-lines">
+          I've been doing <mark>backend for 10+ years</mark>: payments at Wellhub, two-factor authentication for
+          Santander, and now the Erlang servers behind 8 Ball Pool at Miniclip. I'm happiest working on the parts
+          nobody sees, as long as they never break.
+        </span>
+      </p>
+      <p>
+        <span class="boxed-lines">
+          These days I'm having a lot of fun with <mark>AI agent workflows in Claude Code</mark>. Rotom MCP, for
+          example, lets Claude look up real Pokémon card prices instead of guessing them. I studied Systems Analysis,
+          then Game Development and Game Design, plus an AI bootcamp more recently, which explains why so many of my
+          side projects end up as games.
+        </span>
+      </p>
+    </div>
+    {readMore && <a class="read-more" href="/about-me">Read more about me</a>}
+  </div>
+</section>
+
+<style>
+  .about-intro {
+    position: relative;
+    padding-block: 40px 48px;
+    background-color: var(--white);
+    overflow: hidden;
+  }
+  .about-intro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg) center / cover no-repeat;
+    opacity: 0.95;
+  }
+  .container {
+    position: relative;
+  }
+  .text {
+    max-width: 620px;
+  }
+  p {
+    margin: 0 0 22px;
+    font-size: 15px;
+  }
+  .read-more {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--yellow);
+    background: var(--black);
+    padding: 2px 6px;
+  }
+  @media (max-width: 620px) {
+    .about-intro::before {
+      opacity: 0.35;
+    }
+  }
+</style>

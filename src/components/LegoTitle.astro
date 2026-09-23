@@ -1,0 +1,30 @@
+---
+// Section title in the LEGO display font.
+// `ink` is the outline/shadow colour, `fill` the letter colour,
+// `boxed` puts it on a white label (as on the black Projects section).
+interface Props {
+  as?: 'h1' | 'h2' | 'h3';
+  ink?: string;
+  fill?: string;
+  boxed?: boolean;
+  size?: string;
+}
+
+const { as: Tag = 'h2', ink = 'var(--red)', fill = 'var(--white)', boxed = false, size = 'clamp(28px, 4vw, 42px)' } =
+  Astro.props;
+---
+
+<Tag class:list={['lego', 'lego-title', { boxed }]} style={`--lego-ink:${ink};--lego-fill:${fill};font-size:${size}`}>
+  <slot />
+</Tag>
+
+<style>
+  .lego-title {
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .boxed {
+    background: var(--white);
+    padding: 2px 14px 0;
+  }
+</style>

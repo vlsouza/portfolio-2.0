@@ -1,0 +1,169 @@
+---
+import { assets, heroStripes, person } from '../data/site';
+
+// 16-point starburst polygon
+const points = Array.from({ length: 32 }, (_, i) => {
+  const r = i % 2 === 0 ? 50 : 40;
+  const a = (Math.PI * 2 * i) / 32;
+  return `${(50 + r * Math.cos(a)).toFixed(2)},${(50 + r * Math.sin(a)).toFixed(2)}`;
+}).join(' ');
+---
+
+<section class="hero container">
+  <div>
+    <h1>Hi, I'm {person.name}</h1>
+    <p class="lego role" style="--lego-ink:var(--black);--lego-fill:var(--white)">
+      {person.roleLine.map((part) => (part.highlight ? <span class="role-hl">{part.text}</span> : part.text))}
+    </p>
+  </div>
+  <div class="badge" aria-label={person.badge.join(' ')}>
+    <svg viewBox="0 0 100 100" aria-hidden="true"><polygon points={points}></polygon></svg>
+    <span>{person.badge.map((line) => <>{line}<br /></>)}</span>
+  </div>
+</section>
+
+<section class="stripes-band" aria-label="Highlights">
+  <img class="photo" src={assets.heroPhoto} alt="Vinicius from behind, looking at a T-Rex skeleton in a museum" />
+  <ul class="stripes">
+    {
+      heroStripes.map((s) => (
+        <li class={`stripe stripe-${s.color}`}>
+          <span aria-hidden="true">{s.emoji}</span> {s.text}
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-block: 24px 40px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .role {
+    margin: 0;
+    font-size: clamp(15px, 1.8vw, 20px);
+    -webkit-text-stroke-width: 1.2px;
+  }
+  .role-hl {
+    --lego-fill: var(--yellow);
+    background: var(--yellow);
+  }
+  .badge {
+    position: relative;
+    flex: 0 0 auto;
+    width: 150px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    transform: rotate(18deg);
+    transition: transform 0.3s ease;
+  }
+  .badge:hover {
+    transform: rotate(-8deg) scale(1.05);
+  }
+  .badge svg {
+    position: absolute;
+    inset: 0;
+    fill: var(--yellow);
+    stroke: var(--black);
+    stroke-width: 0.8;
+  }
+  .badge span {
+    position: relative;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  .stripes-band {
+    display: grid;
+    grid-template-columns: 28% 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    height: clamp(260px, 17vw, 340px);
+    /* Centred block, slightly narrower than the text column, as in the original */
+    width: calc(min(100vw, var(--container)) - 2 * var(--gutter));
+    max-width: 1200px;
+    margin: 0 auto 40px;
+  }
+  .photo {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+  }
+  .stripes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    min-height: 0;
+  }
+  .stripe {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: padding-left 0.2s ease;
+  }
+  .stripe:hover {
+    padding-left: 32px;
+  }
+  .stripe-blue {
+    background: var(--blue);
+    color: var(--white);
+  }
+  .stripe-red {
+    background: var(--red);
+    color: var(--black);
+  }
+  .stripe-yellow {
+    background: var(--yellow);
+    color: var(--black);
+  }
+  .stripe-black {
+    background: var(--black);
+    color: var(--yellow);
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .badge {
+      align-self: flex-end;
+      width: 104px;
+      margin: -12px 0 -28px;
+    }
+    .badge span {
+      font-size: 7px;
+    }
+    .stripes-band {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      height: auto;
+      width: 100%;
+      margin: 0 0 40px;
+    }
+    .stripes {
+      grid-template-rows: repeat(4, minmax(64px, auto));
+    }
+    .photo {
+      max-height: 280px;
+    }
+  }
+</style>

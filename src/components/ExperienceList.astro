@@ -1,0 +1,172 @@
+---
+import LegoTitle from './LegoTitle.astro';
+import StackTag from './StackTag.astro';
+import { formatDuration, formatPeriod, type Experience } from '../lib/projects';
+
+interface Props {
+  items: Experience[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="experience container" id="experience">
+  <LegoTitle>Experience</LegoTitle>
+  <ol>
+    {
+      items.map((x) => {
+        const { company, role, start, end, location, logo, stack } = x.data;
+        return (
+          <li>
+            <a class="row" href={`/experience/${x.id}`}>
+              <span class="logo">
+                <img src={logo} alt={`${company} logo`} width="64" height="64" loading="lazy" />
+              </span>
+              <div class="main">
+                <h3>
+                  {company}
+                  {!end && <span class="now">Current</span>}
+                </h3>
+                <p class="role">{role}</p>
+                {stack.length > 0 && (
+                  <div class="tags">
+                    {stack.slice(0, 4).map((s) => (
+                      <StackTag name={s} />
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div class="meta">
+                <p class="period">{formatPeriod(start, end)}</p>
+                <p>
+                  {formatDuration(start, end)} · {location}
+                </p>
+              </div>
+              <span class="more" aria-hidden="true">
+                know more
+              </span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ol>
+  <a class="full" href="/about-me#experience">Full career history</a>
+</section>
+
+<style>
+  .experience {
+    padding-block: 24px 64px;
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 20px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+    min-height: 112px;
+    padding: 18px 24px;
+    background: var(--white);
+    border: 2px solid var(--black);
+    box-shadow: var(--shadow-hard);
+    text-decoration: none;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .row:hover,
+  .row:focus-visible {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--blue);
+  }
+  /* Square, sharp-cornered frame for every company logo; the slight zoom trims
+     rounded corners baked into some official icons (e.g. FCamara) */
+  .logo {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    background: var(--white);
+    border: 1.5px solid var(--black);
+  }
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .now {
+    background: var(--yellow);
+    border: 1.5px solid var(--black);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 1px 6px;
+  }
+  .role {
+    margin: 2px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .meta {
+    text-align: right;
+    font-size: 13px;
+  }
+  .meta p {
+    margin: 0;
+  }
+  .period {
+    font-weight: 700;
+  }
+  .more {
+    font-family: var(--font-small);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: var(--blue);
+  }
+  .full {
+    display: inline-block;
+    margin-top: 28px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  @media (max-width: 760px) {
+    .row {
+      grid-template-columns: 56px 1fr;
+      gap: 12px 16px;
+      padding: 16px;
+    }
+    .logo {
+      width: 56px;
+      height: 56px;
+    }
+    .meta {
+      grid-column: 2;
+      text-align: left;
+    }
+    .more {
+      grid-column: 2;
+    }
+  }
+</style>
